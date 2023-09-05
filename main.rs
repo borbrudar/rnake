@@ -3,7 +3,7 @@ extern crate sdl2;
 const GRID_X_SIZE : u32 = 40;
 const GRID_Y_SIZE : u32 = 30;
 const DOT_SIZE_IN_PXS : u32 = 20;
-const margin : i32 = 1;
+const MARGIN : i32 = 1;
 
 use std::ops::Add;
 use std::path::*;
@@ -37,6 +37,12 @@ impl Add<Point> for Point{
         Point(self.0 + rhs.0,self.1 + rhs.1)
     }
 
+}
+
+impl Default for GameContext{
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl GameContext {
@@ -113,15 +119,19 @@ impl GameContext {
     }
 
     pub fn move_up(&mut self){
-        self.player_direction = PlayerDirection::Up;
+        if let PlayerDirection::Down = self.player_direction {return}
+            self.player_direction = PlayerDirection::Up;
     }
     pub fn move_down(&mut self){
+        if let PlayerDirection::Up = self.player_direction {return}
         self.player_direction = PlayerDirection::Down;
     }
     pub fn move_right(&mut self){
+        if let PlayerDirection::Left = self.player_direction {return}
         self.player_direction = PlayerDirection::Right;
     }
     pub fn move_left(&mut self){
+        if let PlayerDirection::Right = self.player_direction {return}
         self.player_direction = PlayerDirection::Left;
     }
     pub fn toggle_pause(&mut self){
@@ -152,10 +162,10 @@ impl Renderer {
     fn draw_dot(&mut self,point : &Point) -> Result<(),String>{
         let Point(x,y) = point;
         self.canvas.fill_rect(Rect::new(
-            x*DOT_SIZE_IN_PXS as i32 + margin,
-            y*DOT_SIZE_IN_PXS as i32 + margin,
-            DOT_SIZE_IN_PXS - (2*margin as u32),
-            DOT_SIZE_IN_PXS - (2*margin as u32),
+            x*DOT_SIZE_IN_PXS as i32 + MARGIN,
+            y*DOT_SIZE_IN_PXS as i32 + MARGIN,
+            DOT_SIZE_IN_PXS - (2*MARGIN as u32),
+            DOT_SIZE_IN_PXS - (2*MARGIN as u32),
         ))?;
         Ok(())
     }
