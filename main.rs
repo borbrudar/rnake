@@ -289,9 +289,9 @@ pub fn main() -> Result<(),String> {
         if tick_counter %3 == 0{
             context.next_tick();
             tick_counter = 0;
+            renderer.draw(&context)?;
         }
         
-        renderer.draw(&context)?;
         ::std::thread::sleep(Duration::new(0,1_000_000_000u32/30))
     }
 
